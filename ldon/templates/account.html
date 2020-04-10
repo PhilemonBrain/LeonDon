@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+    {% block content %}
+    <div class="content-section container-fluid">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ img_file }}">
+            <div class="media-body">
+              <h2 class="account-heading">{{ current_user.full_name }}</h2>
+              <div class="row">
+                <div class="col-12">
+                    <h6>Email:            {{ current_user.email }}</h6>
+                    <h6>Phone Number:     07069501730</h6>
+                    <h6>Branch:            {{ current_user.branch }}</h6>
+                </div>
+              </div>
+            </div>
+        </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Account Info</legend>
+                <div class="form-group">
+                    {{ form.full_name.label(class="form-control-label") }}
+
+                    {% if form.full_name.errors %}
+                        {{ form.full_name(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.full_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.full_name(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.picture.label() }}
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.picture.errors %}
+                            <span class="text-danger">{{ error }}</span></br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+    {% endblock content %}
+    {% block sidebar %}
+        <div class="content-section">
+            <h4>Client List</h4>
+            <p class="text-muted">List of clients under {{current_user.full_name}}</p>
+            <ul>
+                {% for client in client %}
+                    <li class="mb-2"><a href="{{ url_for('client', id=client.id) }}">{{client.full_name}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endblock %}

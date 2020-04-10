@@ -1,0 +1,130 @@
+{% extends 'layout2.html' %}
+    {% block content %}
+    <div class="content-section container-fluid">
+        <div class="media">
+            <img class="rounded-circle account-img" src="{{ img_file }}">
+            <div class="media-body">
+              <h2 class="account-heading">{{ clients.full_name }}</h2>
+              <div class="row">
+                  <div class="col-md-6">
+                    <p class="text-secondary">Email: <br> {{ clients.email }}</p>
+                    <p class="text-secondary">Email:{{ clients.email }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <p class="text-secondary">Loan Balance:{{ clients.loan_balance }}</p>
+                  </div>
+                  <p>Account Officer:{{ clients.author.full_name }}</p>
+              </div>
+            </div>
+        </div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form" disabled>
+                <legend class="border-bottom mb-4">Account Info</legend>
+                <div class="form-group">
+                    {{ form.full_name.label(class="form-control-label") }}
+                    {% if form.full_name.errors %}
+                        {{ form.full_name(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.full_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.full_name(class="form-control") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control ") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.date.label() }}
+                    {{ form.date(class="form-control") }}
+                </div>
+                <div class="form-group">
+                    {{ form.amount.label() }}
+                    {% if form.amount.errors %}
+                        {{ form.amount(class="form-control  is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.amount.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.amount(class="form-control ") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            {% if clients.account_officer == current_user.id %}
+                <div>
+                    <a class="btn btn-secondary btn-sm m-1" href="{{ url_for('update', id=clients.id) }}">Update</a>
+                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                    {% if clients.loan_balance == 0 %}
+                        <button type="button" class="btn btn-info btn-sm m-1">New Loan</button>
+                        <!-- <button class="btn btn-primary btn-sm m-1" type="button" hidden>Add Payment</button> -->
+                    {% else %}
+                        <a class="btn btn-primary btn-sm m-1" href="{{ url_for('add_payment', id=clients.id) }}">Add Payment <i class="fa fa-plus"></i></a>
+                        <button type="button" class="btn btn-info btn-sm m-1" hidden>New Loan</button>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Account?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <form action="{{ url_for('delete_client', id=clients.id) }}" method="POST">
+                        <input type="submit" class="btn btn-danger" value="Delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
+    {% block sidebar %}
+        <div class="mb-5">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Amount Paid</th>
+                    <th scope="col">Balance</th>
+                    <th scope="col">Date</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for pay in payments %}
+                        <tr>
+                            <th scope="row">*</th>
+                            <td>{{ pay.amount_paid }}</td>
+                            <td>{{ clients.loan_balance }}</td>
+                            <td>{{ pay.payment_date.strftime('%Y-%m-%d') }}</td>
+                            {% if current_user.id == clients.id %}
+                            <td><a class="btn btn-secondary btn-sm m-1" href="{{ url_for('update', id=clients.id) }}">Update</a></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}
+    
