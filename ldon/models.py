@@ -1,9 +1,9 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from ldon import db, login_manager, app
+from ldon import db, login_manager
 from flask_login import UserMixin, current_user, login_user, logout_user
 from flask_admin.contrib.sqla import ModelView
-from flask import redirect, url_for, request, flash
+from flask import redirect, url_for, request, flash, current_app
 from flask_admin import Admin, expose, AdminIndexView, BaseView
 from ldon.main.forms import LoginForm
 from ldon import bcrypt
@@ -31,12 +31,12 @@ class Staff(UserMixin, db.Model):
     clients = db.relationship('Client', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
     @staticmethod
     def verify_reset_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             user_id = s.loads(token)['user_id']
         except Exception:
@@ -180,7 +180,7 @@ class MyAdminView(AdminIndexView):
     #     return False
 
 
-admin = Admin(app, name='Leon', template_mode='bootstrap3', index_view=MyAdminView())
+admin = Admin(current_app, name='Leon', template_mode='bootstrap3', index_view=MyAdminView())
 admin.add_view(StaffView(Staff, db.session))
 admin.add_view(ClientView(Client, db.session))
 admin.add_view(PaymentView(Payments, db.session))

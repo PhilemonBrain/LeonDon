@@ -4,32 +4,37 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from ldon.config import Config
 
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '820867a4cdfdd878b6a657fb5e0337b0'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
+db = SQLAlchemy()
+bcrypt = Bcrypt()
+login_manager = LoginManager()
 login_manager.login_view = 'admin.index'
 login_manager.login_message_category = 'info'
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('EMAIL_USER')
-app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
-mail = Mail(app)
+mail = Mail()
 
 
-from ldon.client.routes import client_blueprint
-from ldon.staff.routes import staff_blueprint
-from ldon.main.routes import main_blueprint
-from ldon.payments.routes import payments_blueprint
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
+    with app.app_context():
+        # init_db()
 
-app.register_blueprint(client_blueprint)
-app.register_blueprint(staff_blueprint)
-app.register_blueprint(main_blueprint)
-app.register_blueprint(payments_blueprint)
+        db.init_app(app)
+        login_manager.init_app(app)
+        bcrypt.init_app(app)
+        mail.init_app(app)
+
+        from ldon.client.routes import client_blueprint
+        from ldon.staff.routes import staff_blueprint
+        from ldon.main.routes import main_blueprint
+        from ldon.payments.routes import payments_blueprint
+
+        app.register_blueprint(client_blueprint)
+        app.register_blueprint(staff_blueprint)
+        app.register_blueprint(main_blueprint)
+        app.register_blueprint(payments_blueprint)
+
+    return app
