@@ -1,11 +1,15 @@
-
-
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, DateField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_login import current_user
+from ldon.models import Staff, Client
 
 
 class RegistrationForm(FlaskForm):
     full_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    date = DateTimeField('Account Opens')
+    date = DateField('Account Opens')
     amount = IntegerField('Loan Amount', validators=[DataRequired()])
     phone_number = IntegerField('Phone Number', validators=[DataRequired(), Length(min=11, max=11, message='Must be 11 characters long')])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -46,7 +50,7 @@ class UpdateAccountForm(FlaskForm):
 class RegistrationForm2(FlaskForm):
     full_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    date = DateTimeField('Account Opens')
+    date = DateField('Account Opens')
     amount = IntegerField('Loan Amount', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo("password")])

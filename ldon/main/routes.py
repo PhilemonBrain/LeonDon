@@ -1,9 +1,12 @@
-from flask import Blueprint
+from flask import Blueprint, url_for, request, render_template, redirect, flash
+from ldon import bcrypt
+from flask_login import login_user, logout_user, login_required, current_user
+from ..staff.utils import accs_under_officer
+from ldon.models import Payments, Staff
+from .forms import LoginForm
 
 
 main_blueprint = Blueprint('main', __name__)
-
-
 
 
 @main_blueprint.route('/')
@@ -28,9 +31,7 @@ def login():
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        # hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         staff = Staff.query.filter_by(email=form.email.data).first()
-        # client = Client.query.filter_by(email=form.email.data).first()
         if staff and bcrypt.check_password_hash(staff.password, form.password.data):
             login_user(staff, remember=form.remember.data)
             next_page = request.args.get('next')

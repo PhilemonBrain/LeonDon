@@ -1,6 +1,14 @@
-from flask import Blueprint
+from flask import Blueprint, url_for, redirect, render_template, request, flash
+from flask_login import current_user, login_required
+from ldon import bcrypt
+from ldon import db
+from ..client.forms import UpdateAccountForm
+from .forms import RequestResetForm, ResetPasswordForm
+from ..client.utils import save_picture
+from .utils import send_reset_email, accs_under_officer
+from ldon.models import Staff, Client
 
- 
+
 staff_blueprint = Blueprint('staff', __name__)
 
 
@@ -57,10 +65,9 @@ def password_reset(token):
         return redirect(url_for('password_reset'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        passworrd = bcrypt.generate_password_hash(form.password.data)
+        password = bcrypt.generate_password_hash(form.password.data)
         staff.password = password
         db.session.commit()
         flash('Password has been updated', 'success')
         return redirect(url_for('login'))
     return render_template('password_reset.html', form=form, title='Reset Password')
-

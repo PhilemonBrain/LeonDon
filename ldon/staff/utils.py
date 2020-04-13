@@ -1,4 +1,7 @@
-
+from ldon.models import Staff, Client
+from flask_mail import Message
+from flask_login import current_user
+from ldon import mail
 
 
 def accs_under_officer():
@@ -17,4 +20,3 @@ def send_reset_email(user):
 If you did not make this request then simply igonre this email and no changes will be made
 '''
     mail.send(msg)
-

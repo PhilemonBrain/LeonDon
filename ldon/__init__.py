@@ -23,4 +23,13 @@ app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASS')
 mail = Mail(app)
 
 
-from ldon import routes
+from ldon.client.routes import client_blueprint
+from ldon.staff.routes import staff_blueprint
+from ldon.main.routes import main_blueprint
+from ldon.payments.routes import payments_blueprint
+
+
+app.register_blueprint(client_blueprint)
+app.register_blueprint(staff_blueprint)
+app.register_blueprint(main_blueprint)
+app.register_blueprint(payments_blueprint)
