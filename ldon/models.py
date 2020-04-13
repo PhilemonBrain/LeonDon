@@ -5,7 +5,7 @@ from flask_login import UserMixin, current_user, login_user, logout_user
 from flask_admin.contrib.sqla import ModelView
 from flask import redirect, url_for, request, flash
 from flask_admin import Admin, expose, AdminIndexView, BaseView
-from ldon.forms import LoginForm
+from ldon.main.forms import LoginForm
 from ldon import bcrypt
 
 

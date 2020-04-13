@@ -67,7 +67,7 @@
             <p class="text-muted">List of clients under {{current_user.full_name}}</p>
             <ul>
                 {% for client in client %}
-                    <li class="mb-2"><a href="{{ url_for('client', id=client.id) }}">{{client.full_name}}</a></li>
+                    <li class="mb-2"><a href="{{ url_for('client_blueprint.client', id=client.id) }}">{{client.full_name}}</a></li>
                 {% endfor %}
             </ul>
         </div>

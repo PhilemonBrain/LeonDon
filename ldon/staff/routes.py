@@ -9,7 +9,7 @@ from .utils import send_reset_email, accs_under_officer
 from ldon.models import Staff, Client
 
 
-staff_blueprint = Blueprint('staff', __name__)
+staff_blueprint = Blueprint('Staff', __name__)
 
 
 @staff_blueprint.route('/account', methods=['POST', 'GET'])
@@ -24,7 +24,7 @@ def account():
         current_user.email = form.email.data
         db.session.commit()
         flash('Your Profile has been Updated', 'success')
-        return redirect(url_for('account'))
+        return redirect(url_for('staff_blueprint.account'))
     elif request.method == 'GET':
         form.full_name.data = current_user.full_name
         form.email.data = current_user.email
@@ -45,29 +45,29 @@ def staff_clients(email):
 @staff_blueprint.route('/reset_request', methods=['POST', 'GET'])
 def reset_request():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main_blueprint.home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         staff = Staff.query.filter_by(email=form.email.data).first()
         send_reset_email(staff)
         flash(f'An email hass been sent to {form.email.data}', 'info')
-        return redirect(url_for('login'))
+        return redirect(url_for('main_blueprint.login'))
     return render_template('reset_request.html', form=form, title='Reset Password')
 
 
 @staff_blueprint.route('/reset_request/<token>', methods=['POST', 'GET'])
 def password_reset(token):
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main_blueprint.home'))
     staff = Staff.verify_reset_token(token)
     if staff is None:
         flash('Invalid Or expired token', 'warning')
-        return redirect(url_for('password_reset'))
+        return redirect(url_for('staff_blueprint.password_reset'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         password = bcrypt.generate_password_hash(form.password.data)
         staff.password = password
         db.session.commit()
         flash('Password has been updated', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('main_blueprint.login'))
     return render_template('password_reset.html', form=form, title='Reset Password')

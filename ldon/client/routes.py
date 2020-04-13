@@ -7,7 +7,7 @@ from .utils import save_picture
 from ..staff.utils import accs_under_officer
 
 
-client_blueprint = Blueprint('client', __name__)
+client_blueprint = Blueprint('Client', __name__)
 
 
 @client_blueprint.route('/accounts')
@@ -32,7 +32,7 @@ def new_client():
         db.session.add(client)
         db.session.commit()
         flash('Account Created Successfully', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('main_blueprint.home'))
     return render_template('new_client.html', title='Register Client', legend='New Client', form=form)
 
 
@@ -64,7 +64,7 @@ def update(id):
             clients.client_image = save_picture(form.picture.data)
         db.session.commit()
         flash('Clients details has been succesfully updated', 'Success')
-        return redirect(url_for('client', id=clients.id))
+        return redirect(url_for('client_blueprint.client', id=clients.id))
     elif request.method == 'GET':
         form.email.data = clients.email
         form.full_name.data = clients.full_name
@@ -80,4 +80,4 @@ def delete_client(id):
     db.session.delete(client)
     db.session.commit()
     flash('Client has been data has been deleted')
-    return redirect(url_for('home'))
+    return redirect(url_for('main_blueprint.home'))

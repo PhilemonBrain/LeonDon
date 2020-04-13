@@ -7,10 +7,10 @@
                 <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + pay.payer.client_image) }}">
                     <div class="media-body">
                         <div class="article-metadata">
-                            <a class="mr-2" href="{{ url_for('staff_clients', email=pay.payer.author.email) }}">{{ pay.payer.author.full_name }}</a>
+                            <a class="mr-2" href="{{ url_for('staff_blueprint.staff_clients', email=pay.payer.author.email) }}">{{ pay.payer.author.full_name }}</a>
                             <small class="text-muted">{{ pay.payment_date.strftime('%Y-%m-%d') }}</small>
                         </div>
-                        <h2><a href="{{ url_for('client',id=pay.payer.id) }}" class="article-title">{{ pay.payer.full_name }}</a></h2>
+                        <h2><a href="{{ url_for('client_blueprint.client',id=pay.payer.id) }}" class="article-title">{{ pay.payer.full_name }}</a></h2>
                         <div class="row">
                             <div class="col-md-4">
                                 <h6>Loan Amount</h6>
@@ -31,9 +31,9 @@
         {% for page_num in pays.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
                 {% if pays.page == page_num %}
-                <a class="btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-info mb-4" href="{{ url_for('main_blueprint.home', page=page_num) }}">{{ page_num }}</a>
                 {% else %}
-                <a class="btn btn-outline-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('main_blueprint.home', page=page_num) }}">{{ page_num }}</a>
                 {% endif %}
             {% else %}
                 ...
@@ -47,7 +47,7 @@
             <p class="text-muted">List of clients under {{current_user.full_name}}</p>
             <ul>
                 {% for client in client %}
-                    <li class="mb-2"><a href="{{ url_for('client', id=client.id) }}">{{client.full_name}}</a></li>
+                    <li class="mb-2"><a href="{{ url_for('client_blueprint.client', id=client.id) }}">{{client.full_name}}</a></li>
                 {% endfor %}
             </ul>
         </div>

@@ -20,26 +20,26 @@
             <ul class="navbar-nav ml-auto">
                 {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fa fa-home"></i> Home</a>
+                        <a class="nav-link" href="{{ url_for('main_blueprint.home') }}"><i class="fa fa-home"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('new_client') }}"><i class="fa fa-user-plus"></i> New Client</a>
+                        <a class="nav-link" href="{{ url_for('client_blueprint.new_client') }}"><i class="fa fa-user-plus"></i> New Client</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('accounts') }}"><i class="fa fa-users"></i> Accounts</a>
+                        <a class="nav-link" href="{{ url_for('client_blueprints.accounts') }}"><i class="fa fa-users"></i> Accounts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('account') }}"><i class="fa fa-id-badge"></i> Profile</a>
+                        <a class="nav-link" href="{{ url_for(staff_blueprint.account') }}"><i class="fa fa-id-badge"></i> Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i>Logout</a>
+                        <a class="nav-link" href="{{ url_for('main_blueprint.logout') }}"><i class="fa fa-sign-out"></i>Logout</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}"><i class="fa fa-home"></i> Home</a>
+                        <a class="nav-link" href="{{ url_for('main_blueprint.home') }}"><i class="fa fa-home"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('login') }}"><i class="fa fa-sign-in"></i>Login</a>
+                        <a class="nav-link" href="{{ url_for('main_blueprint.login') }}"><i class="fa fa-sign-in"></i>Login</a>
                     </li>
                 {% endif %}
             </ul>

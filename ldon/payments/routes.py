@@ -5,7 +5,7 @@ from flask_login import login_required
 from ldon import db
 
 
-payments_blueprint = Blueprint('payments', __name__)
+payments_blueprint = Blueprint('Payments', __name__)
 
 
 @payments_blueprint.route('/client/<int:id>/add_payment', methods=['POST', 'GET'])
@@ -24,5 +24,5 @@ def add_payment(id):
             client.loan_balance = bal_outstanding
             db.session.commit()
             flash('Paymment has been added')
-            return redirect(url_for('client', id=client.id))
+            return redirect(url_for('client_blueprint.client', id=client.id))
     return render_template('add_payments.html', form=form)

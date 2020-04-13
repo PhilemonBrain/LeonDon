@@ -58,11 +58,11 @@
                 <div class="form-group">
                     {{ form.submit(class='btn btn-outline-info') }}
                 </div>
-                <small class="text-muted"><a href="{{ url_for('reset_request') }}">Forgot Password?</a></small>
+                <small class="text-muted"><a href="{{ url_for('staff_blueprint.reset_request') }}">Forgot Password?</a></small>
             </form>
         
             <div class="text-muted">
-                Need an account? <a href="{{ url_for('home') }}">Contact Us </a>
+                Need an account? <a href="{{ url_for('main_blueprint.home') }}">Contact Us </a>
             </div>
         </div>
     </div>

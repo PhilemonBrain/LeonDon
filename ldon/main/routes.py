@@ -6,7 +6,7 @@ from ldon.models import Payments, Staff
 from .forms import LoginForm
 
 
-main_blueprint = Blueprint('main', __name__)
+main_blueprint = Blueprint('Main', __name__)
 
 
 @main_blueprint.route('/')
@@ -28,14 +28,14 @@ def about():
 @main_blueprint.route('/login', methods=['POST', 'GET'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main_blueprint.home'))
     form = LoginForm()
     if form.validate_on_submit():
         staff = Staff.query.filter_by(email=form.email.data).first()
         if staff and bcrypt.check_password_hash(staff.password, form.password.data):
             login_user(staff, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(next_page) if next_page else redirect(url_for('main_blueprint.home'))
             flash('Login Successful.', 'success')
         else:
             flash('Login unsuccessful. Please check email and password', 'danger')
@@ -45,4 +45,4 @@ def login():
 @main_blueprint.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('main_blueprint.login'))
